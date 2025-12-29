@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Система заявок (по архитектуре как у друга)</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<div class="container">
+  <h1 class="mb-1">Система заявок</h1>
+  <div class="small-muted mb-3">
+    Архитектура: 4 сущности + DTO/Mapper + 1 сервис + MainController + 4 "Dialog"-контроллера.
+  </div>
+
+  <ul class="nav nav-tabs tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-requests" type="button" role="tab">Заявки</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-residents" type="button" role="tab">Жильцы</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-workers" type="button" role="tab">Исполнители</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-services" type="button" role="tab">Типы услуг</button>
+    </li>
+  </ul>
+
+  <div class="tab-content">
+
+    <!-- Requests -->
+    <div class="tab-pane fade show active" id="tab-requests" role="tabpanel">
+      <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+        <a class="btn btn-primary" th:href="@{/dialogs/requests/new}">+ Добавить заявку</a>
+
+        <form class="d-flex gap-2" method="get" action="/">
+          <input class="form-control" name="req_q" th:value="${req_q}" placeholder="Поиск по заявкам...">
+          <select class="form-select" name="status">
+            <option value="ALL" th:selected="${currentStatus == 'ALL'}">Все статусы</option>
+            <option th:each="s : ${statuses}" th:value="${s.name()}" th:text="${s.title}" th:selected="${currentStatus == s.name()}"></option>
+          </select>
+          <button class="btn btn-outline-secondary" type="submit">Найти</button>
+        </form>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Тема</th>
+            <th>Жилец</th>
+            <th>Услуга</th>
+            <th>Исполнитель</th>
+            <th>Период</th>
+            <th>Приоритет</th>
+            <th>Статус</th>
+            <th class="text-end">Действия</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="r : ${requests}">
+            <td th:text="${r.requestId}"></td>
+            <td>
+              <div th:text="${r.title}"></div>
+              <div class="small-muted" th:text="${#strings.abbreviate(r.description, 90)}"></div>
+            </td>
+            <td th:text="${r.resident != null ? r.resident.name : '-'}"></td>
+            <td th:text="${r.serviceType != null ? r.serviceType.name : '-'}"></td>
+            <td th:text="${r.assignedWorker != null ? r.assignedWorker.name : '-'}"></td>
+            <td th:text="${r.startTime + ' – ' + r.endTime}"></td>
+            <td><span class="badge text-bg-warning" th:text="${r.priority != null ? r.priority.title : '-'}"></span></td>
+            <td><span class="badge text-bg-info" th:text="${r.status != null ? r.status.title : '-'}"></span></td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-primary" th:href="@{/dialogs/requests/{id}/edit(id=${r.requestId})}">Редактировать</a>
+              <form class="inline" method="post" th:action="@{/requests/delete}">
+                <input type="hidden" name="id" th:value="${r.requestId}"/>
+                <button class="btn btn-sm btn-outline-danger" type="submit">Удалить</button>
+              </form>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(requests)}">
+            <td colspan="9" class="text-center small-muted">Нет заявок</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Residents -->
+    <div class="tab-pane fade" id="tab-residents" role="tabpanel">
+      <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+        <a class="btn btn-primary" th:href="@{/dialogs/residents/new}">+ Добавить жильца</a>
+
+        <form class="d-flex gap-2" method="get" action="/">
+          <input class="form-control" name="res_q" th:value="${res_q}" placeholder="Поиск по жильцам...">
+          <button class="btn btn-outline-secondary" type="submit">Найти</button>
+        </form>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Телефон</th>
+            <th>Email</th>
+            <th class="text-end">Действия</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="r : ${residents}">
+            <td th:text="${r.residentId}"></td>
+            <td th:text="${r.name}"></td>
+            <td th:text="${r.phone}"></td>
+            <td th:text="${r.email}"></td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-primary" th:href="@{/dialogs/residents/{id}/edit(id=${r.residentId})}">Редактировать</a>
+              <form class="inline" method="post" th:action="@{/residents/delete}">
+                <input type="hidden" name="id" th:value="${r.residentId}"/>
+                <button class="btn btn-sm btn-outline-danger" type="submit">Удалить</button>
+              </form>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(residents)}">
+            <td colspan="5" class="text-center small-muted">Нет жильцов</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Workers -->
+    <div class="tab-pane fade" id="tab-workers" role="tabpanel">
+      <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+        <a class="btn btn-primary" th:href="@{/dialogs/workers/new}">+ Добавить исполнителя</a>
+
+        <form class="d-flex gap-2" method="get" action="/">
+          <input class="form-control" name="wor_q" th:value="${wor_q}" placeholder="Поиск по исполнителям...">
+          <button class="btn btn-outline-secondary" type="submit">Найти</button>
+        </form>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Роль</th>
+            <th>Рейтинг</th>
+            <th class="text-end">Действия</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="w : ${workers}">
+            <td th:text="${w.workerId}"></td>
+            <td th:text="${w.name}"></td>
+            <td th:text="${w.role}"></td>
+            <td th:text="${w.rating}"></td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-primary" th:href="@{/dialogs/workers/{id}/edit(id=${w.workerId})}">Редактировать</a>
+              <form class="inline" method="post" th:action="@{/workers/delete}">
+                <input type="hidden" name="id" th:value="${w.workerId}"/>
+                <button class="btn btn-sm btn-outline-danger" type="submit">Удалить</button>
+              </form>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(workers)}">
+            <td colspan="5" class="text-center small-muted">Нет исполнителей</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <div class="tab-pane fade" id="tab-services" role="tabpanel">
+      <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+        <a class="btn btn-primary" th:href="@{/dialogs/service-types/new}">+ Добавить тип услуги</a>
+
+        <form class="d-flex gap-2" method="get" action="/">
+          <input class="form-control" name="srv_q" th:value="${srv_q}" placeholder="Поиск по типам услуг...">
+          <button class="btn btn-outline-secondary" type="submit">Найти</button>
+        </form>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Название</th>
+            <th>Цена</th>
+            <th>Длительность (мин)</th>
+            <th class="text-end">Действия</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="s : ${serviceTypes}">
+            <td th:text="${s.serviceTypeId}"></td>
+            <td th:text="${s.name}"></td>
+            <td th:text="${s.price}"></td>
+            <td th:text="${s.durationMinutes}"></td>
+            <td class="text-end">
+              <a class="btn btn-sm btn-outline-primary" th:href="@{/dialogs/service-types/{id}/edit(id=${s.serviceTypeId})}">Редактировать</a>
+              <form class="inline" method="post" th:action="@{/service-types/delete}">
+                <input type="hidden" name="id" th:value="${s.serviceTypeId}"/>
+                <button class="btn btn-sm btn-outline-danger" type="submit">Удалить</button>
+              </form>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(serviceTypes)}">
+            <td colspan="5" class="text-center small-muted">Нет типов услуг</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

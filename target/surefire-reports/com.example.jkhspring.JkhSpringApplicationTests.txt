@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.example.jkhspring.JkhSpringApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.759 s -- in com.example.jkhspring.JkhSpringApplicationTests

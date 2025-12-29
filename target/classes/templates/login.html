@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head('Вход в систему')}"></head>
+<body>
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom">
+  <div class="container-xl">
+    <span class="navbar-brand fw-semibold">
+      <i class="bi bi-grid-1x2-fill me-2"></i>Система заявок
+    </span>
+  </div>
+</nav>
+
+<main class="container-xl login-wrap py-4">
+  <div class="row justify-content-center w-100">
+    <div class="col-md-7 col-lg-5 col-xl-4">
+      <div class="card app-card">
+        <div class="card-body p-4">
+          <h1 class="h4 mb-2">Вход</h1>
+          <div class="app-muted mb-3">
+            В учебной версии проверка логина/пароля отключена — можно ввести любые значения.
+          </div>
+
+          <div class="alert alert-danger" th:if="${param.error}">
+            Не удалось войти. Попробуйте ещё раз.
+          </div>
+          <div class="alert alert-success" th:if="${param.logout}">
+            Вы вышли из системы.
+          </div>
+
+          <form th:action="@{/login}" method="post" class="d-grid gap-3">
+            <div>
+              <label class="form-label">Логин</label>
+              <input class="form-control" type="text" name="username" placeholder="например: user" required>
+            </div>
+            <div>
+              <label class="form-label">Пароль</label>
+              <input class="form-control" type="password" name="password" placeholder="любой пароль" required>
+            </div>
+
+            <button class="btn btn-primary" type="submit">
+              <i class="bi bi-box-arrow-in-right me-1"></i>Войти
+            </button>
+          </form>
+
+          <div class="app-muted mt-3">
+            После входа вы попадёте на главный экран управления заявками.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div th:replace="~{fragments/scripts :: scripts}"></div>
+</body>
+</html>

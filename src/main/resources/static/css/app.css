@@ -1,0 +1,7 @@
+body { padding: 24px; }
+.container { max-width: 1100px; }
+.table td, .table th { vertical-align: middle; }
+.badge { font-size: 0.9em; }
+.tabs { margin-bottom: 16px; }
+form.inline { display: inline; }
+.small-muted { color: #6c757d; font-size: 0.9em; }

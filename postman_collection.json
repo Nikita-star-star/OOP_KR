@@ -1,0 +1,339 @@
+{
+  "info": {
+    "name": "JKH Spring Boot (Residents & Requests)",
+    "_postman_id": "b1b6dfab-9cda-4d0d-9b37-8ec2d16b2b11",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Residents",
+      "item": [
+        {
+          "name": "Create resident",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8082/api/residents",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "residents"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Ivan\",\n  \"lastName\": \"Petrov\",\n  \"phone\": \"+79990001122\",\n  \"email\": \"ivan@mail.ru\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get all residents",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8082/api/residents",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "residents"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get resident by id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8082/api/residents/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "residents",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update resident",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8082/api/residents/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "residents",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Ivan\",\n  \"lastName\": \"Petrov\",\n  \"phone\": \"+79990003344\",\n  \"email\": \"ivan2@mail.ru\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete resident",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:8082/api/residents/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "residents",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get resident requests (1->N)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8082/api/residents/1/requests",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "residents",
+                "1",
+                "requests"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Requests",
+      "item": [
+        {
+          "name": "Create request for resident",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8082/api/residents/1/requests",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "residents",
+                "1",
+                "requests"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Не работает лифт\",\n  \"status\": \"SUBMITTED\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get all requests",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8082/api/requests",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "requests"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get request by id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8082/api/requests/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "requests",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update request",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:8082/api/requests/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "requests",
+                "1"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Лифт работает, но шумит\",\n  \"status\": \"IN_PROGRESS\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete request",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:8082/api/requests/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "requests",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter by status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8082/api/requests/status/SUBMITTED",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "requests",
+                "status",
+                "SUBMITTED"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search by resident lastname (JOIN)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8082/api/requests/search/by-lastname?q=pet",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "requests",
+                "search",
+                "by-lastname"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "pet"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search by keyword",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:8082/api/requests/search/by-keyword?q=лифт",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "api",
+                "requests",
+                "search",
+                "by-keyword"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "лифт"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

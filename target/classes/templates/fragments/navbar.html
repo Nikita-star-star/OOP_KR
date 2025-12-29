@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<body th:fragment="navbar(active)">
+<nav class="navbar navbar-expand-lg bg-body-tertiary border-bottom sticky-top">
+  <div class="container-xl">
+    <a class="navbar-brand fw-semibold" th:href="@{/}">
+      <i class="bi bi-grid-1x2-fill me-2"></i>Система заявок
+    </a>
+    <div class="ms-auto d-flex gap-2 align-items-center">
+      <a class="btn btn-sm btn-primary" th:href="@{/dialogs/requests/new}">
+        <i class="bi bi-plus-lg me-1"></i>Новая заявка
+      </a>
+      <form method="post" th:action="@{/logout}" class="m-0">
+        <button class="btn btn-sm btn-outline-secondary" type="submit">
+          <i class="bi bi-box-arrow-right me-1"></i>Выйти
+        </button>
+      </form>
+    </div>
+  </div>
+</nav>
+</body>
+</html>
